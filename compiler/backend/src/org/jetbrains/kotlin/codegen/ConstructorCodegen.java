@@ -106,12 +106,15 @@ public class ConstructorCodegen {
                                        }
         );
 
-        functionCodegen.generateDefaultIfNeeded(constructorContext, constructorDescriptor, OwnerKind.IMPLEMENTATION,
-                                                DefaultParameterValueLoader.DEFAULT, null);
+        OwnerKind ownerKindForDefault = context.getContextKind() == OwnerKind.ERASED_INLINE_CLASS
+                                        ? OwnerKind.ERASED_INLINE_CLASS
+                                        : OwnerKind.IMPLEMENTATION;
+        functionCodegen.generateDefaultIfNeeded(constructorContext, constructorDescriptor, ownerKindForDefault, DefaultParameterValueLoader.DEFAULT, null);
 
         registerAccessorForHiddenConstructorIfNeeded(constructorDescriptor);
 
-        new DefaultParameterValueSubstitutor(state).generatePrimaryConstructorOverloadsIfNeeded(constructorDescriptor, v, memberCodegen, kind, myClass);
+        new DefaultParameterValueSubstitutor(state)
+                .generatePrimaryConstructorOverloadsIfNeeded(constructorDescriptor, v, memberCodegen, this.kind, myClass);
     }
 
     private void registerAccessorForHiddenConstructorIfNeeded(ClassConstructorDescriptor descriptor) {
@@ -140,7 +143,10 @@ public class ConstructorCodegen {
                 }
         );
 
-        functionCodegen.generateDefaultIfNeeded(constructorContext, constructorDescriptor, OwnerKind.IMPLEMENTATION,
+        OwnerKind ownerKindForDefault = context.getContextKind() == OwnerKind.ERASED_INLINE_CLASS
+                                        ? OwnerKind.ERASED_INLINE_CLASS
+                                        : OwnerKind.IMPLEMENTATION;
+        functionCodegen.generateDefaultIfNeeded(constructorContext, constructorDescriptor, ownerKindForDefault,
                                                 DefaultParameterValueLoader.DEFAULT, null);
 
         new DefaultParameterValueSubstitutor(state).generateOverloadsIfNeeded(
